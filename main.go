@@ -57,14 +57,15 @@ func main() {
 
 		fmt.Println("")
 
-		cmd := exec.Command(exefile, "-i", tnfile, "-strict", "-2", "tmp.mp4")
+		cmd := exec.Command(exefile, "-i", tnfile, "-c", "copy", rfile)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		fmt.Println("Converting...")
 		if err := cmd.Run(); err != nil {
-			fmt.Printf("Command %s \n Error: %s\n", cmd, err)
+			fmt.Printf("ffmpeg error: %v\n", err)
+			return
 		}
-		//		cmd = exec.Command(rfile)
-		//		if err := cmd.Run(); err != nil {
-		//			fmt.Printf("Command %s \n Error: %s\n", cmd, err)
-		//		}
 
 		openCmd = exec.Command("cmd", "/c", "start", rfile)
 		if err := openCmd.Run(); err != nil {

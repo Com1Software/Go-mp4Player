@@ -22,12 +22,12 @@ func main() {
 	fmt.Printf("Operating System : %s\n", runtime.GOOS)
 	exefile := ""
 
-	drive := "f"
-	wdir := "/tmp/"
+	drive := "c"
+	wdir := "/tunes/"
 	switch runtime.GOOS {
 	case "windows":
 		exefile = "c:/ffmpeg/bin/ffmpeg.exe"
-		wdir = drive + ":/dwhelper/"
+		wdir = drive + ":/tunes/"
 
 	case "linux":
 		exefile = "ffmpeg"
@@ -37,9 +37,9 @@ func main() {
 
 	subdir := true
 
-	fmt.Print(exefile)
-	fmt.Print(wdir)
-	fmt.Print(subdir)
+	fmt.Println(exefile)
+	fmt.Println(wdir)
+	fmt.Println(subdir)
 	switch {
 	//-------------------------------------------------------------
 	case len(os.Args) == 2:

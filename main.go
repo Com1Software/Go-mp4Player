@@ -2,6 +2,7 @@ package main
 
 import (
 	"io"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -18,12 +19,15 @@ type Tags struct {
 
 // ----------------------------------------------------------------
 func main() {
+	var openCmd *exec.Cmd
 	fmt.Println("Go mp4 Player")
 	fmt.Printf("Operating System : %s\n", runtime.GOOS)
 	exefile := ""
 
 	drive := "c"
 	wdir := "/tunes/"
+	tnfile := drive + ":" + wdir + "test.mp4"
+	rfile := "./tmp.mp4"
 	switch runtime.GOOS {
 	case "windows":
 		exefile = "c:/ffmpeg/bin/ffmpeg.exe"
@@ -52,6 +56,21 @@ func main() {
 		fmt.Println("Running....")
 
 		fmt.Println("")
+
+		cmd := exec.Command(exefile, "-i", tnfile, "-strict", "-2", "tmp.mp4")
+		if err := cmd.Run(); err != nil {
+			fmt.Printf("Command %s \n Error: %s\n", cmd, err)
+		}
+		//		cmd = exec.Command(rfile)
+		//		if err := cmd.Run(); err != nil {
+		//			fmt.Printf("Command %s \n Error: %s\n", cmd, err)
+		//		}
+
+		openCmd = exec.Command("cmd", "/c", "start", rfile)
+		if err := openCmd.Run(); err != nil {
+			fmt.Printf("Error opening file: %v\n", err)
+		}
+
 	}
 }
 

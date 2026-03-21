@@ -86,12 +86,15 @@ func main() {
 		min := 0
 		max := len(playlist)
 		matrix := make([][2]int, len(playlist))
+		rtn := 0
+		ttnfile := ""
 		fmt.Println(matrix)
 		for idx, tnfile := range playlist {
 
 			fmt.Println(idx)
 			fmt.Println(min + rand.IntN(max-min))
-			matrix = updateMatrix(matrix)
+			rtn, matrix = updateMatrix(matrix, idx, max)
+			ttnfile = playlist[rtn]
 			// Delete old tmp.mp4
 			if _, err := os.Stat(rfile); err == nil {
 				fmt.Println("Deleting old tmp.mp4...")
@@ -101,7 +104,7 @@ func main() {
 			}
 
 			// Copy with ffmpeg
-			cmd := exec.Command(exefile, "-i", tnfile, "-c", "copy", rfile)
+			cmd := exec.Command(exefile, "-i", ttnfile, "-c", "copy", rfile)
 			cmd.Stdout = os.Stdout
 			cmd.Stderr = os.Stderr
 
@@ -221,10 +224,11 @@ func getDuration(ffprobePath, file string) int {
 	return sec
 }
 
-func updateMatrix(m [][2]int) [][2]int {
+func updateMatrix(m [][2]int, idx int, max int) (int, [][2]int) {
+	ii := 0
 	for i := range m {
 		m[i][0] = i
 		m[i][1] = rand.IntN(len(m))
 	}
-	return m
+	return ii, m
 }

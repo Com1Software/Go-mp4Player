@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"io"
+	"math/rand/v2"
 	"os/exec"
 	"path/filepath"
 	"runtime"
@@ -82,8 +83,15 @@ func main() {
 			return
 		}
 
-		for _, tnfile := range playlist {
+		min := 0
+		max := len(playlist)
+		matrix := make([][2]int, len(playlist))
+		fmt.Println(matrix)
+		for idx, tnfile := range playlist {
 
+			fmt.Println(idx)
+			fmt.Println(min + rand.IntN(max-min))
+			matrix = updateMatrix(matrix)
 			// Delete old tmp.mp4
 			if _, err := os.Stat(rfile); err == nil {
 				fmt.Println("Deleting old tmp.mp4...")
@@ -211,4 +219,12 @@ func getDuration(ffprobePath, file string) int {
 	raw = strings.Split(raw, ".")[0]
 	sec, _ := strconv.Atoi(raw)
 	return sec
+}
+
+func updateMatrix(m [][2]int) [][2]int {
+	for i := range m {
+		m[i][0] = i
+		m[i][1] = rand.IntN(len(m))
+	}
+	return m
 }

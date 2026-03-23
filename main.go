@@ -80,18 +80,19 @@ func main() {
 			return
 		}
 
-		min := 0
 		max := len(playlist)
 		matrix := make([][2]int, len(playlist))
 		rtn := 0
 		ttnfile := ""
-		fmt.Println(matrix)
+
 		for idx, tnfile := range playlist {
 
 			fmt.Println(idx)
-			fmt.Println(min + rand.IntN(max-min))
+			// fmt.Println(min + rand.IntN(max-min))
 			rtn, matrix = updateMatrix(matrix, idx, max)
 			ttnfile = playlist[rtn]
+			fmt.Println(matrix)
+			fmt.Printf("Playing: #%d  %s\n", rtn, ttnfile)
 			// Delete old tmp.mp4
 			if _, err := os.Stat(rfile); err == nil {
 				fmt.Println("Deleting old tmp.mp4...")
@@ -159,7 +160,10 @@ func getDuration(ffprobePath, file string) int {
 }
 
 func updateMatrix(m [][2]int, idx int, max int) (int, [][2]int) {
+	min := 0
 	ii := 0
+	rn := rand.IntN(max - min)
+	fmt.Println(rn)
 	for i := range m {
 		m[i][0] = i
 		m[i][1] = rand.IntN(len(m))

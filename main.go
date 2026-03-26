@@ -81,7 +81,7 @@ func main() {
 		}
 
 		max := len(playlist)
-		matrix := make([][2]int, len(playlist))
+		matrix := make([][1]int, len(playlist))
 		rtn := 0
 		ttnfile := ""
 
@@ -89,7 +89,7 @@ func main() {
 
 			fmt.Println(idx)
 			// fmt.Println(min + rand.IntN(max-min))
-			rtn, matrix = updateMatrix(matrix, idx, max)
+			rtn, matrix = updateMatrix(matrix, max)
 			ttnfile = playlist[rtn]
 			fmt.Println(matrix)
 			fmt.Printf("Playing: #%d  %s\n", rtn, ttnfile)
@@ -159,14 +159,78 @@ func getDuration(ffprobePath, file string) int {
 	return sec
 }
 
-func updateMatrix(m [][2]int, idx int, max int) (int, [][2]int) {
+func updateMatrix(m [][1]int, max int) (int, [][1]int) {
+	// Build a list of unused indices
+	used := make(map[int]bool)
+	for _, v := range m {
+		if v[0] >= 0 {
+			used[v[0]] = true
+		}
+	}
+
+	// Find all unused indices
+	var unused []int
+	for i := 0; i < max; i++ {
+		if !used[i] {
+			unused = append(unused, i)
+		}
+	}
+
+	// If no unused left, reset
+	if len(unused) == 0 {
+		for i := range m {
+			m[i][0] = -1
+		}
+		unused = make([]int, max)
+		for i := 0; i < max; i++ {
+			unused[i] = i
+		}
+	}
+
+	// Pick one random unused index
+	choice := unused[rand.IntN(len(unused))]
+
+	// Mark it used
+	for i := range m {
+		if m[i][0] == -1 {
+			m[i][0] = choice
+			break
+		}
+	}
+
+	return choice, m
+}
+
+func apdateMatrix(m [][1]int, max int) (int, [][1]int) {
 	min := 0
 	ii := 0
 	rn := rand.IntN(max - min)
 	fmt.Println(rn)
+	fmt.Println("update")
 	for i := range m {
-		m[i][0] = i
-		m[i][1] = rand.IntN(len(m))
+		got := false
+		for !got {
+			rn := rand.IntN(len(m))
+			if checkuse(m, rn) {
+				m[i][0] = rn
+				got = true
+				fmt.Printf("Got %d\n", rn)
+			}
+		}
 	}
 	return ii, m
+}
+
+func checkuse(m [][1]int, rn int) bool {
+	ok := false
+	fmt.Println(rn)
+	fmt.Println("check")
+	for i := range m {
+		if m[i][0] == rn {
+			ok = true
+			fmt.Printf("Found %d\n", rn)
+		}
+
+	}
+	return ok
 }

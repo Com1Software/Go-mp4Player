@@ -120,9 +120,9 @@ func main() {
 			// Optional: wait for user to close player before continuing
 			// fmt.Println("Press ENTER for next video...")
 			// fmt.Scanln()
-			duration := getDuration(exefilea, tnfile)
+			duration := getDuration(exefilea, ttnfile)
 			wait := time.Duration(duration) * time.Second
-			wait += 10 * time.Second
+			wait += 1 * time.Second
 			time.Sleep(wait)
 		}
 
